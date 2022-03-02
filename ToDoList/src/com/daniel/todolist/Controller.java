@@ -4,6 +4,8 @@ import com.daniel.todolist.datamodel.ToDoData;
 import com.daniel.todolist.datamodel.ToDoItem;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
@@ -29,9 +31,22 @@ public class Controller {
     private ListView<ToDoItem> todoListView;
     @FXML
     private BorderPane mainBorderPane;
+    @FXML
+    private  ContextMenu listContextMenu;
 
 
     public void initialize(){
+        listContextMenu = new ContextMenu();
+        MenuItem deleteMenuItem = new MenuItem("Delete");
+        deleteMenuItem.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                ToDoItem item = todoListView.getSelectionModel().getSelectedItem();
+                deleteItem(item);
+            }
+        });
+        listContextMenu.getItems().addAll(deleteMenuItem);
+
 //        ToDoItem item1 = new ToDoItem("Spotkanie Biznesowe", "Spotkanie z Januszem w sprawie pracy",
 //                LocalDate.of(2022, Month.APRIL, 04));
 //        ToDoItem item2 = new ToDoItem("Impreza urodzinowa", "Urodziny kasi, kupić kwiaty",
@@ -83,6 +98,14 @@ public class Controller {
                         }
                     }
                 };
+                cell.emptyProperty().addListener(
+                        (obs, wasEmpty, isNowEmpty) -> {
+                            if(isNowEmpty){
+                                cell.setContextMenu(null);
+                            }else {
+                                cell.setContextMenu(listContextMenu);
+                            }
+                        });
                 return cell;
             }
         });
@@ -129,6 +152,18 @@ public class Controller {
 //        sb.append(item.getDeadline().toString());
 //        itemDetailsTextArea.setText(sb.toString());
 //    }
+    }
+    public void deleteItem(ToDoItem item){
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Delete ToDo Item");
+        alert.setHeaderText("Usunąć: " +item.getShortDescription());
+        alert.setContentText("Are you sure? Press OK co confirm.");
+        Optional<ButtonType> result = alert.showAndWait();
+
+        if(result.isPresent() && (result.get() == ButtonType.OK)){
+            ToDoData.getInstance().deleteToDoItem(item);
+        }
+
     }
 }
 
