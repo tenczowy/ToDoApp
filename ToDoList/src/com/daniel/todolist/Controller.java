@@ -8,7 +8,10 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.control.*;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
 import javafx.util.Callback;
@@ -34,10 +37,10 @@ public class Controller {
     @FXML
     private  ContextMenu listContextMenu;
 
-
-    public void initialize(){
+    public void initialize() {
         listContextMenu = new ContextMenu();
         MenuItem deleteMenuItem = new MenuItem("Delete");
+        MenuItem menuEditItem = new MenuItem("Edit");
         deleteMenuItem.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
@@ -45,22 +48,15 @@ public class Controller {
                 deleteItem(item);
             }
         });
+        menuEditItem.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                ToDoItem item = todoListView.getSelectionModel().getSelectedItem();
+                editItem(item);
+            }
+        });
         listContextMenu.getItems().addAll(deleteMenuItem);
-
-//        ToDoItem item1 = new ToDoItem("Spotkanie Biznesowe", "Spotkanie z Januszem w sprawie pracy",
-//                LocalDate.of(2022, Month.APRIL, 04));
-//        ToDoItem item2 = new ToDoItem("Impreza urodzinowa", "Urodziny kasi, kupić kwiaty",
-//                LocalDate.of(2022, Month.DECEMBER, 21));
-//        ToDoItem item3 = new ToDoItem("Kupić mleko", "Wyjść z domu, kupić mleko, ale dobre",
-//                LocalDate.of(2022, Month.FEBRUARY, 28));
-//
-//        toDoItems = new ArrayList<ToDoItem>();
-//        toDoItems.add(item1);
-//        toDoItems.add(item2);
-//        toDoItems.add(item3);
-//
-//        ToDoData.getInstance().setToDoItems(toDoItems);
-
+        listContextMenu.getItems().addAll(menuEditItem);
 
         todoListView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<ToDoItem>() {
             @Override
@@ -136,22 +132,8 @@ public class Controller {
             ToDoItem newItem = controller.processResults();
            //todoListView.getItems().setAll(ToDoData.getInstance().getToDoItems());
             todoListView.getSelectionModel().select(newItem);
-    }
+        }
 
-//    @FXML
-//    public void handleClickListView(){
-//
-//        ToDoItem item = todoListView.getSelectionModel().getSelectedItem();
-//        itemDetailsTextArea.setText(item.getDetails());
-//        deadlineLabel.setText(item.getDeadline().toString());
-//
-//
-//        StringBuilder sb = new StringBuilder(item.getDetails());
-//        sb.append("\n\n\n\n");
-//        sb.append("Due: ");
-//        sb.append(item.getDeadline().toString());
-//        itemDetailsTextArea.setText(sb.toString());
-//    }
     }
     public void deleteItem(ToDoItem item){
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
@@ -164,6 +146,45 @@ public class Controller {
             ToDoData.getInstance().deleteToDoItem(item);
         }
 
+    }
+
+    public void editItem(ToDoItem item){
+        Dialog<ButtonType> dialog = new Dialog<>();
+        dialog.initOwner(mainBorderPane.getScene().getWindow());
+        dialog.setTitle("Add new TuDu Item");
+        dialog.setHeaderText("Use this dialog to create new TuDu Item");
+        FXMLLoader fxmlLoader = new FXMLLoader();
+        fxmlLoader.setLocation(getClass().getResource("todoItemDialog.fxml"));
+
+        try {
+            Parent root = fxmlLoader.load();
+            DialogController controller = fxmlLoader.getController();
+            controller.setShortDescriptionField(item);
+            dialog.getDialogPane().setContent(root);
+
+        } catch (IOException e) {
+            System.out.println("Couldn't load the dialog");
+            e.printStackTrace();
+            return;
+        }
+
+
+        dialog.getDialogPane().getButtonTypes().add(ButtonType.OK);
+        dialog.getDialogPane().getButtonTypes().add(ButtonType.CANCEL);
+        Optional<ButtonType> result = dialog.showAndWait();
+
+
+
+    }
+
+    @FXML
+    public void handleKeyPressed(KeyEvent keyEvent){
+        ToDoItem selectedItem = todoListView.getSelectionModel().getSelectedItem();
+        if(selectedItem != null){
+            if(keyEvent.getCode().equals(KeyCode.DELETE)){
+                deleteItem(selectedItem);
+            }
+        }
     }
 }
 
