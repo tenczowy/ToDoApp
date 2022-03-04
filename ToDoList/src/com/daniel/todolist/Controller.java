@@ -36,8 +36,7 @@ public class Controller {
     @FXML
     private  ContextMenu listContextMenu;
 
-
-    public void initialize(){
+    public void initialize() {
         listContextMenu = new ContextMenu();
         MenuItem deleteMenuItem = new MenuItem("Delete");
         MenuItem menuEditItem = new MenuItem("Edit");
@@ -147,22 +146,8 @@ public class Controller {
             ToDoItem newItem = controller.processResults();
            //todoListView.getItems().setAll(ToDoData.getInstance().getToDoItems());
             todoListView.getSelectionModel().select(newItem);
-    }
+        }
 
-//    @FXML
-//    public void handleClickListView(){
-//
-//        ToDoItem item = todoListView.getSelectionModel().getSelectedItem();
-//        itemDetailsTextArea.setText(item.getDetails());
-//        deadlineLabel.setText(item.getDeadline().toString());
-//
-//
-//        StringBuilder sb = new StringBuilder(item.getDetails());
-//        sb.append("\n\n\n\n");
-//        sb.append("Due: ");
-//        sb.append(item.getDeadline().toString());
-//        itemDetailsTextArea.setText(sb.toString());
-//    }
     }
     public void deleteItem(ToDoItem item){
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
@@ -184,13 +169,12 @@ public class Controller {
         dialog.setHeaderText("Use this dialog to create new TuDu Item");
         FXMLLoader fxmlLoader = new FXMLLoader();
         fxmlLoader.setLocation(getClass().getResource("todoItemDialog.fxml"));
-        ToDoItem currentItem = todoListView.getSelectionModel().getSelectedItem();
-
-
+        DialogController controller = new DialogController();
 
         try{
             dialog.getDialogPane().setContent(fxmlLoader.load());
-        }catch (IOException e){
+
+        } catch (IOException e) {
             System.out.println("Couldn't load the dialog");
             e.printStackTrace();
             return;
@@ -200,18 +184,6 @@ public class Controller {
         dialog.getDialogPane().getButtonTypes().add(ButtonType.CANCEL);
         Optional<ButtonType> result = dialog.showAndWait();
 
-//        ToDoItem currentItem = todoListView.getSelectionModel().getSelectedItem();
-//        shortDescriptionField.setText(currentItem.getShortDescription());
-//        detailsArea.setText(currentItem.getDetails());
-//        deadLinePicker.setValue(currentItem.getDeadline());
-
-
-
-        if(result.isPresent() && result.get() == ButtonType.OK) {
-            DialogController controller = fxmlLoader.getController();
-            ToDoItem newItem = controller.processResults();
-            todoListView.getSelectionModel().select(newItem);
-        }
     }
 
     @FXML
