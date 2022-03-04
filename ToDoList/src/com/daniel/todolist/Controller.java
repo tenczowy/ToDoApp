@@ -8,6 +8,7 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
@@ -56,21 +57,6 @@ public class Controller {
         });
         listContextMenu.getItems().addAll(deleteMenuItem);
         listContextMenu.getItems().addAll(menuEditItem);
-
-//        ToDoItem item1 = new ToDoItem("Spotkanie Biznesowe", "Spotkanie z Januszem w sprawie pracy",
-//                LocalDate.of(2022, Month.APRIL, 04));
-//        ToDoItem item2 = new ToDoItem("Impreza urodzinowa", "Urodziny kasi, kupić kwiaty",
-//                LocalDate.of(2022, Month.DECEMBER, 21));
-//        ToDoItem item3 = new ToDoItem("Kupić mleko", "Wyjść z domu, kupić mleko, ale dobre",
-//                LocalDate.of(2022, Month.FEBRUARY, 28));
-//
-//        toDoItems = new ArrayList<ToDoItem>();
-//        toDoItems.add(item1);
-//        toDoItems.add(item2);
-//        toDoItems.add(item3);
-//
-//        ToDoData.getInstance().setToDoItems(toDoItems);
-
 
         todoListView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<ToDoItem>() {
             @Override
@@ -169,10 +155,12 @@ public class Controller {
         dialog.setHeaderText("Use this dialog to create new TuDu Item");
         FXMLLoader fxmlLoader = new FXMLLoader();
         fxmlLoader.setLocation(getClass().getResource("todoItemDialog.fxml"));
-        DialogController controller = new DialogController();
 
-        try{
-            dialog.getDialogPane().setContent(fxmlLoader.load());
+        try {
+            Parent root = fxmlLoader.load();
+            DialogController controller = fxmlLoader.getController();
+            controller.setShortDescriptionField(item);
+            dialog.getDialogPane().setContent(root);
 
         } catch (IOException e) {
             System.out.println("Couldn't load the dialog");
@@ -180,9 +168,12 @@ public class Controller {
             return;
         }
 
+
         dialog.getDialogPane().getButtonTypes().add(ButtonType.OK);
         dialog.getDialogPane().getButtonTypes().add(ButtonType.CANCEL);
         Optional<ButtonType> result = dialog.showAndWait();
+
+
 
     }
 

@@ -12,11 +12,11 @@ import java.time.format.DateTimeFormatter;
 
 public class DialogController {
     @FXML
-    private TextField shortDescriptionField;
+    private  TextField shortDescriptionField;
     @FXML
-    private TextArea detailsArea;
+    private  TextArea detailsArea;
     @FXML
-    private DatePicker deadLinePicker;
+    private  DatePicker deadLinePicker;
 
 
     public ToDoItem processResults() {
@@ -30,12 +30,16 @@ public class DialogController {
         return newItem;
     }
 
-
-    public void initializeField(ToDoItem item) {
-        System.out.println(item.getShortDescription());
+    public void setShortDescriptionField(ToDoItem item) {
         shortDescriptionField.setText(item.getShortDescription());
-
     }
 
+    public void setDetailsArea(TextArea detailsArea) {
+        this.detailsArea = detailsArea;
+    }
+
+    public void setDeadLinePicker(DatePicker deadLinePicker) {
+        this.deadLinePicker = deadLinePicker;
+    }
 }
 
