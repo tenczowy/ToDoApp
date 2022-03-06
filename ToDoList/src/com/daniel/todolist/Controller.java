@@ -152,8 +152,8 @@ public class Controller {
     public void editItem(ToDoItem item){
         Dialog<ButtonType> dialog = new Dialog<>();
         dialog.initOwner(mainBorderPane.getScene().getWindow());
-        dialog.setTitle("Add new TuDu Item");
-        dialog.setHeaderText("Use this dialog to create new TuDu Item");
+        dialog.setTitle("Edit existing item");
+        dialog.setHeaderText("Use this dialog to edit TuDu Item");
         FXMLLoader fxmlLoader = new FXMLLoader();
         fxmlLoader.setLocation(getClass().getResource("todoItemDialog.fxml"));
 
