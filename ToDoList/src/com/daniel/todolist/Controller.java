@@ -144,6 +144,7 @@ public class Controller {
 
         if(result.isPresent() && (result.get() == ButtonType.OK)){
             ToDoData.getInstance().deleteToDoItem(item);
+            refreshView();
         }
 
     }
@@ -160,6 +161,8 @@ public class Controller {
             Parent root = fxmlLoader.load();
             DialogController controller = fxmlLoader.getController();
             controller.setShortDescriptionField(item);
+            controller.setDetailsArea(item);
+            controller.setDeadLinePicker(item);
             dialog.getDialogPane().setContent(root);
 
         } catch (IOException e) {
@@ -172,6 +175,13 @@ public class Controller {
         dialog.getDialogPane().getButtonTypes().add(ButtonType.OK);
         dialog.getDialogPane().getButtonTypes().add(ButtonType.CANCEL);
         Optional<ButtonType> result = dialog.showAndWait();
+        if (result.isPresent() && (result.get() == ButtonType.OK)) {
+            DialogController controller = fxmlLoader.getController();
+            ToDoItem newItem = controller.processResults();
+            ToDoData.getInstance().deleteToDoItem(item);
+            refreshView();
+            todoListView.getSelectionModel().select(newItem);
+        }
 
 
 

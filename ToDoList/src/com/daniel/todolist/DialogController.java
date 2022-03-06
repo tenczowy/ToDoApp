@@ -33,6 +33,8 @@ public class DialogController {
     public void setShortDescriptionField(ToDoItem item) {
         shortDescriptionField.setText(item.getShortDescription());
     }
+    public void setDetailsArea(ToDoItem item){detailsArea.setText(item.getDetails());}
+    public void setDeadLinePicker(ToDoItem item){deadLinePicker.setValue(item.getDeadline());}
 
     public void setDetailsArea(TextArea detailsArea) {
         this.detailsArea = detailsArea;
