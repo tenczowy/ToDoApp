@@ -4,6 +4,7 @@ import com.daniel.todolist.datamodel.ToDoData;
 import com.daniel.todolist.datamodel.ToDoItem;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -19,6 +20,7 @@ import javafx.util.Callback;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
@@ -70,8 +72,17 @@ public class Controller {
             }
         });
 
+        SortedList<ToDoItem> sortedList = new SortedList<ToDoItem>(ToDoData.getInstance().getToDoItems(),
+                new Comparator<ToDoItem>() {
+                    @Override
+                    public int compare(ToDoItem o1, ToDoItem o2) {
+                        return o1.getDeadline().compareTo(o2.getDeadline());
+                    }
+                });
 
-        todoListView.setItems(ToDoData.getInstance().getToDoItems());
+
+//        todoListView.setItems(ToDoData.getInstance().getToDoItems());
+        todoListView.setItems(sortedList);
         todoListView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
         todoListView.getSelectionModel().selectFirst();
 
@@ -194,6 +205,14 @@ public class Controller {
             if(keyEvent.getCode().equals(KeyCode.DELETE)){
                 deleteItem(selectedItem);
             }
+        }
+    }
+
+    public void handleFilterButton(){
+        if(filterToggleButton.isSelected()){
+
+        }else {
+
         }
     }
 }
